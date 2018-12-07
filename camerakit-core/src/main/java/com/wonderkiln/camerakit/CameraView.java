@@ -536,9 +536,9 @@ public class CameraView extends CameraViewLayout {
         mEventDispatcher.addListener(CameraKitEventListener);
     }
 
-    public void setPreviewCallback(Camera.PreviewCallback callback){
+    public void setPreviewCallback(Camera.PreviewCallback callback) {
         mCameraImpl.setPreviewCallback(callback);
-    }	    }
+    }
 
     public void bindCameraKitListener(Object object) {
         mEventDispatcher.addBinding(object);
