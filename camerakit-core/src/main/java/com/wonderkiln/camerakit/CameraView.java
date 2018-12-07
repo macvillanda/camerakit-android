@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+import android.hardware.Camera;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -534,6 +535,10 @@ public class CameraView extends CameraViewLayout {
     public void addCameraKitListener(CameraKitEventListener CameraKitEventListener) {
         mEventDispatcher.addListener(CameraKitEventListener);
     }
+
+    public void setPreviewCallback(Camera.PreviewCallback callback){
+        mCameraImpl.setPreviewCallback(callback);
+    }	    }
 
     public void bindCameraKitListener(Object object) {
         mEventDispatcher.addBinding(object);
