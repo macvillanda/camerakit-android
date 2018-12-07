@@ -1,5 +1,6 @@
 package com.wonderkiln.camerakit;
 
+import android.hardware.Camera;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.vision.Detector;
@@ -11,6 +12,7 @@ abstract class CameraImpl {
 
     protected final EventDispatcher mEventDispatcher;
     protected final PreviewImpl mPreview;
+    protected Camera.PreviewCallback previewCallback = null;
 
     CameraImpl(EventDispatcher eventDispatcher, PreviewImpl preview) {
         mEventDispatcher = eventDispatcher;
@@ -53,6 +55,8 @@ abstract class CameraImpl {
     abstract Size getPreviewResolution();
     abstract boolean isCameraOpened();
     abstract boolean frontCameraOnly();
+
+    abstract void setPreviewCallback(Camera.PreviewCallback callback);
 
     @Nullable
     abstract CameraProperties getCameraProperties();

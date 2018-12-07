@@ -1,5 +1,6 @@
 package com.wonderkiln.camerakit;
 
+import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
@@ -125,6 +126,26 @@ public class Camera1 extends CameraImpl {
         if (mPreview.isReady()) {
             setDisplayAndDeviceOrientation();
             setupPreview();
+
+            if (previewCallback != null){
+                int size = mPreviewSize.getWidth() * mPreviewSize.getHeight() * ImageFormat.getBitsPerPixel(mCameraParameters.getPreviewFormat());
+                final byte[][] mPreBuffer = {new byte[size]};
+                mCamera.addCallbackBuffer(mPreBuffer[0]);
+                mCamera.setPreviewCallbackWithBuffer(new Camera.PreviewCallback() {
+                    @Override
+                    public void onPreviewFrame(byte[] data, Camera camera) {
+                        if (mPreBuffer[0] == null) {
+                            mPreBuffer[0] = new byte[ImageFormat.getBitsPerPixel(mCameraParameters.getPreviewFormat())];
+                        }
+                        if (mPreBuffer[0] != null && mCamera != null){
+                            mCamera.addCallbackBuffer(mPreBuffer[0]);
+                            Camera1.this.previewCallback.onPreviewFrame(mPreBuffer[0], camera);
+                        }
+                    }
+                });
+            }
+
+
             mCamera.startPreview();
             mShowingPreview = true;
         }
@@ -648,6 +669,11 @@ public class Camera1 extends CameraImpl {
         Camera.getCameraInfo(0, cameraInfo);
         boolean isFrontCameraOnly = (Camera.getNumberOfCameras() == 1 && cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT);
         return isFrontCameraOnly;
+    }
+
+    @Override
+    void setPreviewCallback(Camera.PreviewCallback callback) {
+        this.previewCallback = callback;
     }
 
     @Nullable
